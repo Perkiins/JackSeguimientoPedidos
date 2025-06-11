@@ -1,6 +1,8 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors');
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const SHOPIFY_DOMAIN = 'jack-beds-store.myshopify.com';
