@@ -12,18 +12,22 @@ app.post('/api/track-order', async (req, res) => {
     const { orderNumber, email } = req.body;
 
     try {
-        const response = await axios.get(`https://${SHOPIFY_DOMAIN}/admin/api/2023-10/orders.json?name=${orderNumber}&email=${email}`, {
+        // Buscar solo por email (Shopify lo permite)
+        const response = await axios.get(`https://${SHOPIFY_DOMAIN}/admin/api/2023-10/orders.json?email=${email}`, {
             headers: {
                 'X-Shopify-Access-Token': API_TOKEN,
                 'Content-Type': 'application/json'
             }
         });
 
-        const order = response.data.orders[0];
+        // Filtrar por número de pedido (ignorando '#')
+        const order = response.data.orders.find(o => o.name.replace('#', '') === orderNumber.replace('#', ''));
 
         if (!order) {
             return res.status(404).json({ error: 'Pedido no encontrado o email incorrecto' });
         }
+
+        console.log("Tags crudos:", order.tags);
 
         res.json({
           orderNumber: order.name,
@@ -31,6 +35,7 @@ app.post('/api/track-order', async (req, res) => {
             .split(',')
             .map(t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').trim())
         });
+
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ error: 'Error al buscar el pedido' });
