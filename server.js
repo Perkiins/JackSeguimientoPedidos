@@ -41,8 +41,14 @@ app.post('/api/track-order', async (req, res) => {
             zip: order.shipping_address?.zip,
             city: order.shipping_address?.city,
             country: order.shipping_address?.country
-          }
+          },
+          items: order.line_items.map(item => ({
+            title: item.title,
+            quantity: item.quantity,
+            image: item.image?.src || null // Esto puede venir vacío
+          }))
         });
+
 
     } catch (err) {
         console.error(err.message);
