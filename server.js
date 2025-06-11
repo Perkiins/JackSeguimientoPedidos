@@ -33,7 +33,15 @@ app.post('/api/track-order', async (req, res) => {
           orderNumber: order.name,
           tags: order.tags
             .split(',')
-            .map(t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').trim())
+            .map(t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').trim()),
+          shippingAddress: {
+            name: order.shipping_address?.name,
+            address1: order.shipping_address?.address1,
+            address2: order.shipping_address?.address2,
+            zip: order.shipping_address?.zip,
+            city: order.shipping_address?.city,
+            country: order.shipping_address?.country
+          }
         });
 
     } catch (err) {
