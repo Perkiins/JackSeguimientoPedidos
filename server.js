@@ -27,7 +27,9 @@ app.post('/api/track-order', async (req, res) => {
 
         res.json({
             orderNumber: order.name,
-            tags: order.tags.split(',').map(t => t.trim())
+            tags: order.tags
+              .split(',')
+              .map(t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, '').trim())
         });
     } catch (err) {
         console.error(err.message);
