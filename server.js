@@ -13,7 +13,7 @@ app.post('/api/track-order', async (req, res) => {
 
     try {
         // Buscar solo por email (Shopify lo permite)
-        const response = await axios.get(`https://${SHOPIFY_DOMAIN}/admin/api/2023-10/orders.json?email=${email}`, {
+        const response = await axios.get(`https://${SHOPIFY_DOMAIN}/admin/api/2023-10/orders.json?email=${email}&status=any`, {
             headers: {
                 'X-Shopify-Access-Token': API_TOKEN,
                 'Content-Type': 'application/json'
